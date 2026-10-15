@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 </head>
 <body>
-<title>Regalos Elegidos · Anfitriona</title>
+<title>Regalos Elegidos · Anfitriona (v94)</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -234,7 +234,17 @@ $("gate").onsubmit=async ev=>{
 };
 
 const fmt=d=>new Date(d).toLocaleString("es-DO",{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"});
+let EXTRA=-1;
+function addUnknown(){
+  claims.forEach(c=>{
+    if(BYID[c.item_id])return;
+    if(EXTRA<0){CATS.push({t:"Agregados después",deco:"heart",items:[]});EXTRA=CATS.length-1}
+    const nm=c.item_id.replace(/-/g," ").replace(/^./,x=>x.toUpperCase());
+    const it={id:c.item_id,name:nm,sub:"",num:ALL.length+1,cat:EXTRA};ALL.push(it);BYID[it.id]=it;
+  });
+}
 function render(){
+  addUnknown();
   const byItem=Object.fromEntries(claims.map(c=>[c.item_id,c]));
   const takenItems=ALL.filter(i=>byItem[i.id]);const free=ALL.filter(i=>!byItem[i.id]);
   const people={};takenItems.forEach(i=>{const k=(byItem[i.id].guest_name||"Sin nombre").trim();(people[k]=people[k]||[]).push(i)});
